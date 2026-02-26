@@ -106,7 +106,7 @@ export class CdkDeployPipeline {
         {
           name: 'Install dependencies',
           run: installCommand,
-          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
         {
           name: 'Synth',
@@ -141,7 +141,7 @@ export class CdkDeployPipeline {
       {
         name: 'Install dependencies',
         run: installCommand,
-        env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+        env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
       },
       {
         name: 'Download cloud assembly',
@@ -178,12 +178,12 @@ export class CdkDeployPipeline {
             `echo '${JSON.stringify({ name: `${pkgNamespace}/${appName}`, version: '0.0.0' })}' > cdk.out/package.json`,
             'cd cdk.out && npm version --no-git-tag-version from-git || npm version --no-git-tag-version patch',
           ].join('\n'),
-          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
         {
           name: 'Publish assembly to GitHub Packages',
           run: 'cd cdk.out && npm publish',
-          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+          env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
       );
     }
@@ -256,7 +256,7 @@ export class CdkDeployPipeline {
           {
             name: 'Install dependencies',
             run: installCommand,
-            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
           },
           {
             name: 'Download cloud assembly',

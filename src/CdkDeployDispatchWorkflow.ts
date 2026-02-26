@@ -103,12 +103,12 @@ export class CdkDeployDispatchWorkflow {
           {
             name: 'Install dependencies',
             run: installCommand,
-            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
           },
           {
             name: 'Download versioned assembly',
             run: `npm pack ${pkgNamespace}/${appName}@\${{ github.event.inputs.version }} && tar -xzf *.tgz && mv package cdk.out`,
-            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+            env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
           },
           {
             name: 'AWS Credentials',
