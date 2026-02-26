@@ -115,7 +115,7 @@ project.package.addField('engines', {
 project.deps.removeDependency('constructs');
 project.deps.addDependency(`constructs@>=${minConstructsVersion} <11.0.0`, DependencyType.PEER);
 
-project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.upgrade.steps.2.with.node-version', workflowNodeVersion);
+project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.upgrade.steps.1.with.node-version', workflowNodeVersion);
 project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.upgrade.permissions.id-token', 'write');
 project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.upgrade.permissions.packages', 'write');
 project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.upgrade.permissions.pull-requests', 'write');
@@ -136,13 +136,13 @@ project.github!.tryFindWorkflow('upgrade-main')!.file!.addOverride('jobs.pr.step
   },
 });
 
-project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release.steps.3.with.node-version', workflowNodeVersion);
+project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release.steps.2.with.node-version', workflowNodeVersion);
 project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_github.steps.0.with.node-version', workflowNodeVersion);
 
 // Override node-version to 24 for npm trusted publishing (requires npm 11.5.1+)
 project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_npm.steps.0.with.node-version', '24');
 // Add --ignore-engines to yarn install since Node 24 is outside the engines range (20.x)
-project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_npm.steps.5.run', 'cd .repo && yarn install --check-files --frozen-lockfile --ignore-engines');
+project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_npm.steps.4.run', 'cd .repo && yarn install --check-files --frozen-lockfile --ignore-engines');
 
 // Override node-version for publish jobs that default to minNodeVersion (20.0.0)
 project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_pypi.steps.0.with.node-version', workflowNodeVersion);
@@ -154,7 +154,7 @@ project.github!.tryFindWorkflow('release')!.file!.addOverride('jobs.release_gola
  */
 project.github!.tryFindWorkflow('build')!.file!.addOverride('jobs.build.permissions.id-token', 'write');
 project.github!.tryFindWorkflow('build')!.file!.addOverride('jobs.build.permissions.packages', 'read');
-project.github!.tryFindWorkflow('build')!.file!.addOverride('jobs.build.steps.2.with.node-version', workflowNodeVersion);
+project.github!.tryFindWorkflow('build')!.file!.addOverride('jobs.build.steps.1.with.node-version', workflowNodeVersion);
 
 /**
  * For the package jobs, we need to be able to write to packages and also need id-token permissions for OIDC to authenticate to the registry.
