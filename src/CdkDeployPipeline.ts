@@ -202,17 +202,26 @@ export class CdkDeployPipeline {
           run: [
             'cd cdk.out && npm publish --registry=https://npm.pkg.github.com',
             'VERSION=$(node -p "require(\'./package.json\').version")',
-            'echo "### Assembly Published" >> $GITHUB_STEP_SUMMARY',
-            'echo "" >> $GITHUB_STEP_SUMMARY',
-            `echo "**Package:** \\\`${pkgNamespace}/${appName}\\\`" >> $GITHUB_STEP_SUMMARY`,
-            'echo "**Version:** \\`$VERSION\\`" >> $GITHUB_STEP_SUMMARY',
-            'echo "" >> $GITHUB_STEP_SUMMARY',
-            'echo "To deploy this version manually:" >> $GITHUB_STEP_SUMMARY',
-            'echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
-            'echo "gh workflow run deploy-dispatch.yml -f environment=<env> -f version=$VERSION" >> $GITHUB_STEP_SUMMARY',
-            'echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
+            'echo "ASSEMBLY_VERSION=$VERSION" >> $GITHUB_ENV',
           ].join('\n'),
           env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+        },
+        {
+          name: 'Tag and release assembly version',
+          run: [
+            'git tag "v${ASSEMBLY_VERSION}"',
+            'git push origin "v${ASSEMBLY_VERSION}"',
+          ].join('\n'),
+        },
+        {
+          name: 'Create GitHub Release',
+          uses: 'softprops/action-gh-release@v2',
+          with: {
+            tag_name: 'v${{ env.ASSEMBLY_VERSION }}',
+            name: 'v${{ env.ASSEMBLY_VERSION }}',
+            body: `Assembly \`${pkgNamespace}/${appName}@\${{ env.ASSEMBLY_VERSION }}\` published to GitHub Packages.\n\nDeploy manually:\n\`\`\`\ngh workflow run deploy-dispatch.yml -f environment=<env> -f version=\${{ env.ASSEMBLY_VERSION }}\n\`\`\``,
+            generate_release_notes: true,
+          },
         },
       );
     }
