@@ -29,6 +29,12 @@ type DeployStageOptions struct {
 	// Default: - uses the pipeline-level iamRoleRegion or the stage env.region
 	//
 	IamRoleRegion *string `field:"optional" json:"iamRoleRegion" yaml:"iamRoleRegion"`
+	// When true, this stage is excluded from the automatic deploy.yml pipeline and can only be deployed via the deploy-dispatch.yml workflow.
+	//
+	// Auto-deploy stages cannot depend on manual-approval stages.
+	// Default: false.
+	//
+	ManualApproval *bool `field:"optional" json:"manualApproval" yaml:"manualApproval"`
 	// Specific CDK stack names to deploy in this stage.
 	// Default: - ['{stackPrefix}-{stageName}'].
 	//
