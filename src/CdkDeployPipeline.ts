@@ -159,7 +159,7 @@ export class CdkDeployPipeline {
       },
       {
         name: 'Publish assets',
-        run: 'npx cdk-assets publish -p cdk.out/**/*-assets.json',
+        run: 'for manifest in $(find cdk.out -name "*-assets.json"); do npx cdk-assets publish -p "$manifest"; done',
       },
     ];
 
