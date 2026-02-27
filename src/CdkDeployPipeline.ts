@@ -199,7 +199,19 @@ export class CdkDeployPipeline {
         },
         {
           name: 'Publish assembly to GitHub Packages',
-          run: 'cd cdk.out && npm publish --registry=https://npm.pkg.github.com',
+          run: [
+            'cd cdk.out && npm publish --registry=https://npm.pkg.github.com',
+            'VERSION=$(node -p "require(\'./package.json\').version")',
+            'echo "### Assembly Published" >> $GITHUB_STEP_SUMMARY',
+            'echo "" >> $GITHUB_STEP_SUMMARY',
+            `echo "**Package:** \\\`${pkgNamespace}/${appName}\\\`" >> $GITHUB_STEP_SUMMARY`,
+            'echo "**Version:** \\`$VERSION\\`" >> $GITHUB_STEP_SUMMARY',
+            'echo "" >> $GITHUB_STEP_SUMMARY',
+            'echo "To deploy this version manually:" >> $GITHUB_STEP_SUMMARY',
+            'echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
+            'echo "gh workflow run deploy-dispatch.yml -f environment=<env> -f version=$VERSION" >> $GITHUB_STEP_SUMMARY',
+            'echo "\\`\\`\\`" >> $GITHUB_STEP_SUMMARY',
+          ].join('\n'),
           env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
       );
