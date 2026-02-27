@@ -50,6 +50,16 @@ export interface DeployStageOptions {
    * @default - ['{stackPrefix}-{stageName}']
    */
   readonly stacks?: string[];
+
+  /**
+   * When true, this stage is excluded from the automatic deploy.yml pipeline
+   * and can only be deployed via the deploy-dispatch.yml workflow.
+   *
+   * Auto-deploy stages cannot depend on manual-approval stages.
+   *
+   * @default false
+   */
+  readonly manualApproval?: boolean;
 }
 
 /**

@@ -225,6 +225,64 @@ describe('CdkDeployPipeline', () => {
     expect(out['.github/workflows/deploy-dispatch.yml']).toBeUndefined();
   });
 
+  test('manualApproval stage is excluded from deploy.yml but present in deploy-dispatch.yml', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+        { name: 'Production', env: prodEnv, environment: 'production', manualApproval: true },
+      ],
+    });
+    const out = synthSnapshot(app);
+    const deploy = out['.github/workflows/deploy.yml'];
+    const dispatch = out['.github/workflows/deploy-dispatch.yml'];
+
+    // deploy.yml should have Dev but NOT Production
+    expect(deploy).toContain('Deploy Dev');
+    expect(deploy).not.toContain('Deploy Production');
+    expect(deploy).not.toContain('deploy-production');
+
+    // deploy-dispatch.yml should have both
+    expect(dispatch).toContain('development');
+    expect(dispatch).toContain('production');
+  });
+
+  test('throws when auto-deploy stage depends on manualApproval stage', () => {
+    const app = createApp();
+    expect(() => {
+      new CdkDeployPipeline(app, {
+        pkgNamespace: '@test-org',
+        stackPrefix: 'TestApp',
+        iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+        stages: [
+          { name: 'Dev', env: devEnv, manualApproval: true },
+          { name: 'Production', env: prodEnv, dependsOn: ['Dev'] },
+        ],
+      });
+    }).toThrow(/Auto-deploy stages cannot depend on manual-approval stages/);
+  });
+
+  test('manualApproval stage with dependsOn is valid', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+        { name: 'Production', env: prodEnv, environment: 'production', dependsOn: ['Dev'], manualApproval: true },
+      ],
+    });
+    const out = synthSnapshot(app);
+    const deploy = out['.github/workflows/deploy.yml'];
+    // Only Dev should be in deploy.yml
+    expect(deploy).toContain('Deploy Dev');
+    expect(deploy).not.toContain('deploy-production');
+  });
+
   test('publishes assembly to GitHub Packages by default', () => {
     const app = createApp();
     new CdkDeployPipeline(app, {

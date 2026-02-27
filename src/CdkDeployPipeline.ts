@@ -56,6 +56,21 @@ export class CdkDeployPipeline {
         }
       }
     }
+
+    // Validate that auto-deploy stages don't depend on manual-approval stages
+    for (const stage of stages) {
+      if (!stage.manualApproval && stage.dependsOn) {
+        for (const dep of stage.dependsOn) {
+          const depStage = stages.find((s) => s.name === dep);
+          if (depStage?.manualApproval) {
+            throw new Error(
+              `Stage '${stage.name}' depends on '${dep}', which has manualApproval enabled. Auto-deploy stages cannot depend on manual-approval stages.`,
+            );
+          }
+        }
+      }
+    }
+
     validateNoCycles(stages);
 
     if (useGithubPackagesForAssembly && !pkgNamespace) {
@@ -203,6 +218,7 @@ export class CdkDeployPipeline {
 
     // --- Per-Stage Deploy Jobs ---
     for (const stage of stages) {
+      if (stage.manualApproval) continue;
       const jobId = `deploy-${toKebabCase(stage.name)}`;
       const stacks =
         stage.stacks ?? [`${stackPrefix}-${stage.name}`];

@@ -361,6 +361,7 @@ const deployStageOptions: DeployStageOptions = { ... }
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.environment">environment</a></code> | <code>string</code> | GitHub Environment name for protection rules, secrets scoping, and deployment approvals. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.iamRoleArn">iamRoleArn</a></code> | <code>string</code> | Override the default OIDC role ARN for this stage. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.iamRoleRegion">iamRoleRegion</a></code> | <code>string</code> | Override the default AWS region for OIDC credential assumption. |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.manualApproval">manualApproval</a></code> | <code>boolean</code> | When true, this stage is excluded from the automatic deploy.yml pipeline and can only be deployed via the deploy-dispatch.yml workflow. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.stacks">stacks</a></code> | <code>string[]</code> | Specific CDK stack names to deploy in this stage. |
 
 ---
@@ -448,6 +449,21 @@ public readonly iamRoleRegion: string;
 - *Default:* uses the pipeline-level iamRoleRegion or the stage env.region
 
 Override the default AWS region for OIDC credential assumption.
+
+---
+
+##### `manualApproval`<sup>Optional</sup> <a name="manualApproval" id="@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions.property.manualApproval"></a>
+
+```typescript
+public readonly manualApproval: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+When true, this stage is excluded from the automatic deploy.yml pipeline and can only be deployed via the deploy-dispatch.yml workflow.
+
+Auto-deploy stages cannot depend on manual-approval stages.
 
 ---
 
