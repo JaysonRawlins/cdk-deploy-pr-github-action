@@ -175,14 +175,14 @@ export class CdkDeployPipeline {
         {
           name: 'Create assembly package',
           run: [
-            `echo '${JSON.stringify({ name: `${pkgNamespace}/${appName}`, version: '0.0.0' })}' > cdk.out/package.json`,
+            `echo '${JSON.stringify({ name: `${pkgNamespace}/${appName}`, version: '0.0.0', publishConfig: { registry: 'https://npm.pkg.github.com' } })}' > cdk.out/package.json`,
             'cd cdk.out && npm version --no-git-tag-version from-git || npm version --no-git-tag-version patch',
           ].join('\n'),
           env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
         {
           name: 'Publish assembly to GitHub Packages',
-          run: 'cd cdk.out && npm publish',
+          run: 'cd cdk.out && npm publish --registry=https://npm.pkg.github.com',
           env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
         },
       );
