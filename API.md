@@ -75,6 +75,7 @@ const cdkDeployPipelineOptions: CdkDeployPipelineOptions = { ... }
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.manualDeployment">manualDeployment</a></code> | <code>boolean</code> | Generate a workflow_dispatch workflow for manual deployments and rollbacks. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | Node.js version for workflow runners. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | Version and publish cloud assembly to GitHub Packages for rollback support. |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | Working directory for the CDK app, relative to the repository root. |
 
 ---
 
@@ -219,6 +220,24 @@ Version and publish cloud assembly to GitHub Packages for rollback support.
 
 ---
 
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
+- *Default:* repository root
+
+Working directory for the CDK app, relative to the repository root.
+
+Useful for monorepos where infrastructure lives in a subdirectory (e.g., 'infra').
+
+When set, all workflow run steps will use `defaults.run.working-directory`
+and artifact paths will be adjusted accordingly.
+
+---
+
 ### DeployDispatchInternalOptions <a name="DeployDispatchInternalOptions" id="@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions"></a>
 
 Internal helper to build deploy dispatch workflow options from pipeline options.
@@ -246,6 +265,7 @@ const deployDispatchInternalOptions: DeployDispatchInternalOptions = { ... }
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.stages">stages</a></code> | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions">DeployStageOptions</a>[]</code> | *No description.* |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -336,6 +356,16 @@ public readonly stages: DeployStageOptions[];
 ```
 
 - *Type:* <a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions">DeployStageOptions</a>[]
+
+---
+
+##### `workingDirectory`<sup>Optional</sup> <a name="workingDirectory" id="@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.workingDirectory"></a>
+
+```typescript
+public readonly workingDirectory: string;
+```
+
+- *Type:* string
 
 ---
 

@@ -34,7 +34,13 @@ export class CdkDeployPipeline {
       manualDeployment = true,
       useGithubPackagesForAssembly = true,
       branchName = 'main',
+      workingDirectory,
     } = options;
+
+    // Normalize working directory: strip trailing slashes
+    const wd = workingDirectory?.replace(/\/+$/, '');
+    const cdkOutPath = wd ? `${wd}/cdk.out/` : 'cdk.out/';
+    const defaults = wd ? { run: { 'working-directory': wd } } : undefined;
 
     // Validate inputs
     if (stages.length === 0) {
@@ -99,6 +105,7 @@ export class CdkDeployPipeline {
     jobs.synth = {
       name: 'Synthesize CDK application',
       runsOn: ['ubuntu-latest'],
+      ...(defaults && { defaults }),
       permissions: {
         contents: JobPermission.READ,
         packages: JobPermission.READ,
@@ -132,7 +139,7 @@ export class CdkDeployPipeline {
           uses: `actions/upload-artifact@${UPLOAD_ARTIFACT_VERSION}`,
           with: {
             name: 'cloud-assembly',
-            path: 'cdk.out/',
+            path: cdkOutPath,
           },
         },
       ],
@@ -161,7 +168,7 @@ export class CdkDeployPipeline {
       {
         name: 'Download cloud assembly',
         uses: `actions/download-artifact@${DOWNLOAD_ARTIFACT_VERSION}`,
-        with: { name: 'cloud-assembly', path: 'cdk.out/' },
+        with: { name: 'cloud-assembly', path: cdkOutPath },
       },
       {
         name: 'AWS Credentials',
@@ -230,6 +237,7 @@ export class CdkDeployPipeline {
       name: 'Publish assets to AWS',
       needs: ['synth'],
       runsOn: ['ubuntu-latest'],
+      ...(defaults && { defaults }),
       permissions: {
         contents: JobPermission.WRITE,
         packages: JobPermission.WRITE,
@@ -268,6 +276,7 @@ export class CdkDeployPipeline {
         name: `Deploy ${stage.name}`,
         needs: needs,
         runsOn: ['ubuntu-latest'],
+        ...(defaults && { defaults }),
         environment: githubEnv,
         concurrency: {
           'group': `deploy-${toKebabCase(stage.name)}`,
@@ -300,7 +309,7 @@ export class CdkDeployPipeline {
           {
             name: 'Download cloud assembly',
             uses: `actions/download-artifact@${DOWNLOAD_ARTIFACT_VERSION}`,
-            with: { name: 'cloud-assembly', path: 'cdk.out/' },
+            with: { name: 'cloud-assembly', path: cdkOutPath },
           },
           {
             name: 'AWS Credentials',
@@ -342,6 +351,7 @@ export class CdkDeployPipeline {
         nodeVersion,
         cdkCommand,
         installCommand,
+        workingDirectory: wd,
       });
     }
   }
@@ -361,4 +371,5 @@ export interface DeployDispatchInternalOptions {
   readonly nodeVersion: string;
   readonly cdkCommand: string;
   readonly installCommand: string;
+  readonly workingDirectory?: string;
 }
