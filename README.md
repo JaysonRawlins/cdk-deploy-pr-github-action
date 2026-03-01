@@ -100,6 +100,7 @@ Downloads the specified assembly version from GitHub Packages and deploys it. Th
 | `manualDeployment` | `boolean` | `true` | Generate the dispatch workflow |
 | `useGithubPackagesForAssembly` | `boolean` | `true` | Publish cloud assembly to GitHub Packages |
 | `branchName` | `string` | `main` | Branch that triggers deployments |
+| `workingDirectory` | `string` | — | Subdirectory where the CDK app lives (e.g., `infra`). Sets `defaults.run.working-directory` on all jobs and adjusts artifact paths. |
 
 ### `DeployStageOptions`
 
@@ -152,6 +153,25 @@ Each deploy creates a GitHub Release with the assembly version. To roll back:
 ```bash
 gh workflow run deploy-dispatch.yml -f environment=production -f version=0.0.3
 ```
+
+### Monorepo support
+
+If your CDK app lives in a subdirectory, use the `workingDirectory` option:
+
+```typescript
+new CdkDeployPipeline(project, {
+  stackPrefix: 'MyApp',
+  pkgNamespace: '@my-org',
+  iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubActionsOidcRole',
+  workingDirectory: 'infra',
+  stages: [
+    { name: 'dev', env: devEnv, environment: 'development' },
+    { name: 'prod', env: prodEnv, environment: 'production', manualApproval: true },
+  ],
+});
+```
+
+This sets `defaults.run.working-directory: infra` on all workflow jobs and adjusts artifact upload/download paths to `infra/cdk.out/`.
 
 ## Prerequisites
 
