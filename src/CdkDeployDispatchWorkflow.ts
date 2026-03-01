@@ -111,7 +111,7 @@ export class CdkDeployDispatchWorkflow {
           },
           {
             name: 'Download versioned assembly',
-            run: `npm pack ${pkgNamespace}/${appName}@\${{ github.event.inputs.version }} && tar -xzf *.tgz && mv package cdk.out`,
+            run: `npm pack ${pkgNamespace}/${appName}@\${{ github.event.inputs.version }} --registry=https://npm.pkg.github.com && tar -xzf *.tgz && mv package cdk.out`,
             env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
           },
           {

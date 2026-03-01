@@ -332,6 +332,21 @@ describe('CdkDeployPipeline', () => {
     expect(dispatch).toContain('working-directory: infra');
   });
 
+  test('deploy-dispatch npm pack uses GitHub Packages registry', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+      ],
+    });
+    const out = synthSnapshot(app);
+    const dispatch = out['.github/workflows/deploy-dispatch.yml'];
+    expect(dispatch).toContain('--registry=https://npm.pkg.github.com');
+  });
+
   test('workingDirectory with trailing slash is normalized', () => {
     const app = createApp();
     new CdkDeployPipeline(app, {
