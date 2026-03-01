@@ -119,4 +119,15 @@ export interface CdkDeployPipelineOptions {
    * @default 'main'
    */
   readonly branchName?: string;
+
+  /**
+   * Working directory for the CDK app, relative to the repository root.
+   * Useful for monorepos where infrastructure lives in a subdirectory (e.g., 'infra').
+   *
+   * When set, all workflow run steps will use `defaults.run.working-directory`
+   * and artifact paths will be adjusted accordingly.
+   *
+   * @default - repository root
+   */
+  readonly workingDirectory?: string;
 }

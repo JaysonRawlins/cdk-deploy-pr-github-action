@@ -28,7 +28,10 @@ export class CdkDeployDispatchWorkflow {
       nodeVersion,
       cdkCommand,
       installCommand,
+      workingDirectory,
     } = options;
+
+    const defaults = workingDirectory ? { run: { 'working-directory': workingDirectory } } : undefined;
 
     const gh = project.github ?? new GitHub(project);
     const workflow = new GithubWorkflow(gh, 'deploy-dispatch', {
@@ -76,6 +79,7 @@ export class CdkDeployDispatchWorkflow {
         name: `Deploy ${stage.name} (manual)`,
         if: `github.event.inputs.environment == '${githubEnv}'`,
         runsOn: ['ubuntu-latest'],
+        ...(defaults && { defaults }),
         environment: githubEnv,
         concurrency: {
           'group': `deploy-${toKebabCase(stage.name)}`,

@@ -298,4 +298,70 @@ describe('CdkDeployPipeline', () => {
     expect(workflow).toContain('Publish assembly to GitHub Packages');
     expect(workflow).toContain('npm publish');
   });
+
+  test('workingDirectory sets defaults.run.working-directory and adjusts artifact paths', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+      workingDirectory: 'infra',
+    });
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).toContain('working-directory: infra');
+    expect(workflow).toContain('path: infra/cdk.out/');
+  });
+
+  test('workingDirectory sets working-directory in deploy-dispatch.yml', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+      ],
+      workingDirectory: 'infra',
+    });
+    const out = synthSnapshot(app);
+    const dispatch = out['.github/workflows/deploy-dispatch.yml'];
+    expect(dispatch).toContain('working-directory: infra');
+  });
+
+  test('workingDirectory with trailing slash is normalized', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+      workingDirectory: 'infra/',
+    });
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).toContain('working-directory: infra');
+    expect(workflow).toContain('path: infra/cdk.out/');
+    expect(workflow).not.toContain('infra//');
+  });
+
+  test('no workingDirectory does not add working-directory', () => {
+    const app = createApp();
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+    });
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).not.toContain('working-directory');
+  });
 });
