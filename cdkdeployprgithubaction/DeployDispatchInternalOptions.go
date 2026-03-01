@@ -14,5 +14,6 @@ type DeployDispatchInternalOptions struct {
 	PkgNamespace *string `field:"required" json:"pkgNamespace" yaml:"pkgNamespace"`
 	StackPrefix *string `field:"required" json:"stackPrefix" yaml:"stackPrefix"`
 	Stages *[]*DeployStageOptions `field:"required" json:"stages" yaml:"stages"`
+	WorkingDirectory *string `field:"optional" json:"workingDirectory" yaml:"workingDirectory"`
 }
 
