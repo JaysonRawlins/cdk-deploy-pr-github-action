@@ -365,6 +365,162 @@ describe('CdkDeployPipeline', () => {
     expect(workflow).not.toContain('infra//');
   });
 
+  test('preGitHubSteps factory receives { stage, workingDirectory } context', () => {
+    const app = createApp();
+    const receivedCtx: any[] = [];
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+      ],
+      workingDirectory: 'infra',
+      preGitHubSteps: (ctx: any) => {
+        receivedCtx.push(ctx);
+        return [{ name: 'Build app', run: 'npm run build' }];
+      },
+    });
+
+    // Factory called once for deploy.yml Dev stage + once for dispatch Dev stage
+    expect(receivedCtx.length).toBeGreaterThanOrEqual(1);
+    expect(receivedCtx[0].stage).toBe('Dev');
+    expect(receivedCtx[0].workingDirectory).toBe('infra');
+
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).toContain('name: Build app');
+  });
+
+  test('postGitHubSteps factory receives { stage, workingDirectory } context', () => {
+    const app = createApp();
+    const receivedCtx: any[] = [];
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+      postGitHubSteps: (ctx: any) => {
+        receivedCtx.push(ctx);
+        return [{ name: 'Notify Slack', run: 'echo done' }];
+      },
+    });
+
+    expect(receivedCtx.length).toBeGreaterThanOrEqual(1);
+    expect(receivedCtx[0].stage).toBe('Dev');
+    expect(receivedCtx[0].workingDirectory).toBeUndefined();
+
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).toContain('name: Notify Slack');
+  });
+
+  test('static array pre/post steps are inserted in deploy jobs', () => {
+    const app = createApp();
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+      preGitHubSteps: [{ name: 'Build app', run: 'npm run build' }],
+      postGitHubSteps: [{ name: 'Notify team', run: 'echo notify' }],
+    });
+
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+
+    // Pre-steps before AWS creds in deploy job
+    const preIdx = workflow.indexOf('name: Build app');
+    const credsIdx = workflow.indexOf('id: creds');
+    expect(preIdx).toBeGreaterThan(-1);
+    expect(credsIdx).toBeGreaterThan(preIdx);
+
+    // Post-steps after deploy step
+    const deployIdx = workflow.indexOf('id: deploy');
+    const postIdx = workflow.indexOf('name: Notify team');
+    expect(postIdx).toBeGreaterThan(deployIdx);
+  });
+
+  test('pre/post steps are NOT on synth or publish-assets jobs', () => {
+    const app = createApp();
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+      preGitHubSteps: [{ name: 'UNIQUE_PRE_MARKER', run: 'echo pre' }],
+      postGitHubSteps: [{ name: 'UNIQUE_POST_MARKER', run: 'echo post' }],
+    });
+
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+
+    // Extract synth job section (between 'Synthesize CDK application' and 'Publish assets to AWS')
+    const synthStart = workflow.indexOf('Synthesize CDK application');
+    const publishStart = workflow.indexOf('Publish assets to AWS');
+    const synthSection = workflow.substring(synthStart, publishStart);
+    expect(synthSection).not.toContain('UNIQUE_PRE_MARKER');
+    expect(synthSection).not.toContain('UNIQUE_POST_MARKER');
+
+    // Extract publish-assets section (between 'Publish assets to AWS' and first 'Deploy')
+    const deployStart = workflow.indexOf('Deploy Dev');
+    const publishSection = workflow.substring(publishStart, deployStart);
+    expect(publishSection).not.toContain('UNIQUE_PRE_MARKER');
+    expect(publishSection).not.toContain('UNIQUE_POST_MARKER');
+  });
+
+  test('deploy step IDs are present on deploy jobs', () => {
+    const app = createApp();
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv },
+      ],
+    });
+
+    const out = synthSnapshot(app);
+    const workflow = out['.github/workflows/deploy.yml'];
+    expect(workflow).toContain('id: creds');
+    expect(workflow).toContain('id: deploy');
+  });
+
+  test('pre/post steps are passed through to deploy-dispatch.yml', () => {
+    const app = createApp();
+
+    new CdkDeployPipeline(app, {
+      pkgNamespace: '@test-org',
+      stackPrefix: 'TestApp',
+      iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubOidc',
+      stages: [
+        { name: 'Dev', env: devEnv, environment: 'development' },
+      ],
+      preGitHubSteps: [{ name: 'Build app', run: 'npm run build' }],
+      postGitHubSteps: [{ name: 'Notify team', run: 'echo notify' }],
+    });
+
+    const out = synthSnapshot(app);
+    const dispatch = out['.github/workflows/deploy-dispatch.yml'];
+    expect(dispatch).toContain('name: Build app');
+    expect(dispatch).toContain('name: Notify team');
+
+    // Step IDs should be present in dispatch too
+    expect(dispatch).toContain('id: creds');
+    expect(dispatch).toContain('id: deploy');
+  });
+
   test('no workingDirectory does not add working-directory', () => {
     const app = createApp();
     new CdkDeployPipeline(app, {
