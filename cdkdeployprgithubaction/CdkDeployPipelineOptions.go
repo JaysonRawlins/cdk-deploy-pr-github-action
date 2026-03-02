@@ -37,6 +37,24 @@ type CdkDeployPipelineOptions struct {
 	// Default: '24.x'
 	//
 	NodeVersion *string `field:"optional" json:"nodeVersion" yaml:"nodeVersion"`
+	// Additional GitHub Actions steps to run after deploy completes.
+	//
+	// Only applied to deploy jobs (not synth or publish-assets).
+	// Accepts a static array of steps, or a factory function receiving context:
+	// `(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+	//
+	// When `workingDirectory` is set, all `run:` steps inherit that directory.
+	// To run a step at the repository root, add `working-directory: '.'` to that step.
+	PostGitHubSteps interface{} `field:"optional" json:"postGitHubSteps" yaml:"postGitHubSteps"`
+	// Additional GitHub Actions steps to run before deploy (after install/artifact download, before AWS creds).
+	//
+	// Only applied to deploy jobs (not synth or publish-assets).
+	// Accepts a static array of steps, or a factory function receiving context:
+	// `(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+	//
+	// When `workingDirectory` is set, all `run:` steps inherit that directory.
+	// To run a step at the repository root, add `working-directory: '.'` to that step.
+	PreGitHubSteps interface{} `field:"optional" json:"preGitHubSteps" yaml:"preGitHubSteps"`
 	// Version and publish cloud assembly to GitHub Packages for rollback support.
 	// Default: true.
 	//

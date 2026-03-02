@@ -101,6 +101,8 @@ Downloads the specified assembly version from GitHub Packages and deploys it. Th
 | `useGithubPackagesForAssembly` | `boolean` | `true` | Publish cloud assembly to GitHub Packages |
 | `branchName` | `string` | `main` | Branch that triggers deployments |
 | `workingDirectory` | `string` | — | Subdirectory where the CDK app lives (e.g., `infra`). Sets `defaults.run.working-directory` on all jobs and adjusts artifact paths. |
+| `preGitHubSteps` | `any` | — | Steps to run before deploy (after install/download, before AWS creds). Static array or factory `({ stage, workingDirectory }) => steps[]`. Applied to deploy jobs only. |
+| `postGitHubSteps` | `any` | — | Steps to run after deploy. Static array or factory `({ stage, workingDirectory }) => steps[]`. Applied to deploy jobs only. |
 
 ### `DeployStageOptions`
 
@@ -172,6 +174,35 @@ new CdkDeployPipeline(project, {
 ```
 
 This sets `defaults.run.working-directory: infra` on all workflow jobs and adjusts artifact upload/download paths to `infra/cdk.out/`.
+
+### Pre/post workflow steps
+
+Use `preGitHubSteps` and `postGitHubSteps` to run custom steps before and after deployments. These are applied to deploy jobs only (not synth or publish-assets). Useful for building source code, sending Slack notifications, or running health checks.
+
+```go
+new CdkDeployPipeline(project, {
+  stackPrefix: 'MyApp',
+  pkgNamespace: '@my-org',
+  iamRoleArn: 'arn:aws:iam::111111111111:role/GitHubActionsOidcRole',
+  workingDirectory: 'infra',
+  stages: [
+    { name: 'dev', env: devEnv, environment: 'development' },
+  ],
+  preGitHubSteps: ({ stage, workingDirectory }) => [
+    // Build at project root (overrides working-directory default)
+    { name: 'Build app', run: 'npm run build', 'working-directory': '.' },
+  ],
+  postGitHubSteps: ({ stage }) => [
+    { name: 'Notify Slack', uses: 'slackapi/slack-github-action@v2', with: { /* ... */ } },
+  ],
+});
+```
+
+Pre/post steps are also passed through to `deploy-dispatch.yml` so dispatch deployments get the same hooks.
+
+Deploy jobs include step IDs `creds` (AWS Credentials) and `deploy` (Deploy step) that post-steps can reference via `${{ steps.deploy.outcome }}`.
+
+> **Note:** When `workingDirectory` is set, all `run:` steps inherit that directory by default. To run a step at the repository root, add `working-directory: '.'` to that step.
 
 ## Prerequisites
 
