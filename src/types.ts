@@ -130,4 +130,26 @@ export interface CdkDeployPipelineOptions {
    * @default - repository root
    */
   readonly workingDirectory?: string;
+
+  /**
+   * Additional GitHub Actions steps to run before deploy (after install/artifact download, before AWS creds).
+   * Only applied to deploy jobs (not synth or publish-assets).
+   * Accepts a static array of steps, or a factory function receiving context:
+   * `(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+   *
+   * When `workingDirectory` is set, all `run:` steps inherit that directory.
+   * To run a step at the repository root, add `working-directory: '.'` to that step.
+   */
+  readonly preGitHubSteps?: any;
+
+  /**
+   * Additional GitHub Actions steps to run after deploy completes.
+   * Only applied to deploy jobs (not synth or publish-assets).
+   * Accepts a static array of steps, or a factory function receiving context:
+   * `(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+   *
+   * When `workingDirectory` is set, all `run:` steps inherit that directory.
+   * To run a step at the repository root, add `working-directory: '.'` to that step.
+   */
+  readonly postGitHubSteps?: any;
 }

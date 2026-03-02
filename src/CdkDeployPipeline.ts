@@ -4,6 +4,18 @@ import { CdkDeployDispatchWorkflow } from './CdkDeployDispatchWorkflow';
 import { CdkDeployPipelineOptions, DeployStageOptions } from './types';
 import { toKebabCase, validateNoCycles } from './utils';
 
+type GitHubStep = {
+  name?: string;
+  id?: string;
+  if?: string;
+  uses?: string;
+  run?: string;
+  with?: Record<string, any>;
+  env?: Record<string, string>;
+  continueOnError?: boolean;
+  shell?: string;
+};
+
 const CHECKOUT_VERSION = 'v5';
 const SETUP_NODE_VERSION = 'v5';
 const AWS_CREDENTIALS_VERSION = 'v5';
@@ -35,6 +47,8 @@ export class CdkDeployPipeline {
       useGithubPackagesForAssembly = true,
       branchName = 'main',
       workingDirectory,
+      preGitHubSteps: rawPreSteps,
+      postGitHubSteps: rawPostSteps,
     } = options;
 
     // Normalize working directory: strip trailing slashes
@@ -272,6 +286,11 @@ export class CdkDeployPipeline {
         .map((s) => `${cdkCommand} deploy ${s} --require-approval never --app cdk.out`)
         .join(' && ');
 
+      // Resolve pre/post steps (accept static array or factory function)
+      const stageCtx = { stage: stage.name, workingDirectory: wd };
+      const preSteps: GitHubStep[] = typeof rawPreSteps === 'function' ? rawPreSteps(stageCtx) : (rawPreSteps ?? []);
+      const postSteps: GitHubStep[] = typeof rawPostSteps === 'function' ? rawPostSteps(stageCtx) : (rawPostSteps ?? []);
+
       jobs[jobId] = {
         name: `Deploy ${stage.name}`,
         needs: needs,
@@ -311,8 +330,10 @@ export class CdkDeployPipeline {
             uses: `actions/download-artifact@${DOWNLOAD_ARTIFACT_VERSION}`,
             with: { name: 'cloud-assembly', path: cdkOutPath },
           },
+          ...preSteps,
           {
             name: 'AWS Credentials',
+            id: 'creds',
             uses: `aws-actions/configure-aws-credentials@${AWS_CREDENTIALS_VERSION}`,
             with: {
               'role-to-assume': roleArn,
@@ -322,8 +343,10 @@ export class CdkDeployPipeline {
           },
           {
             name: `Deploy ${stage.name}`,
+            id: 'deploy',
             run: deployCommand,
           },
+          ...postSteps,
         ],
       };
 
@@ -352,6 +375,8 @@ export class CdkDeployPipeline {
         cdkCommand,
         installCommand,
         workingDirectory: wd,
+        preGitHubSteps: rawPreSteps,
+        postGitHubSteps: rawPostSteps,
       });
     }
   }
@@ -372,4 +397,6 @@ export interface DeployDispatchInternalOptions {
   readonly cdkCommand: string;
   readonly installCommand: string;
   readonly workingDirectory?: string;
+  readonly preGitHubSteps?: any;
+  readonly postGitHubSteps?: any;
 }

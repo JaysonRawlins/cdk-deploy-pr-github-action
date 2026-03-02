@@ -74,6 +74,8 @@ const cdkDeployPipelineOptions: CdkDeployPipelineOptions = { ... }
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.installCommand">installCommand</a></code> | <code>string</code> | Package install command. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.manualDeployment">manualDeployment</a></code> | <code>boolean</code> | Generate a workflow_dispatch workflow for manual deployments and rollbacks. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.nodeVersion">nodeVersion</a></code> | <code>string</code> | Node.js version for workflow runners. |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.postGitHubSteps">postGitHubSteps</a></code> | <code>any</code> | Additional GitHub Actions steps to run after deploy completes. |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.preGitHubSteps">preGitHubSteps</a></code> | <code>any</code> | Additional GitHub Actions steps to run before deploy (after install/artifact download, before AWS creds). |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.useGithubPackagesForAssembly">useGithubPackagesForAssembly</a></code> | <code>boolean</code> | Version and publish cloud assembly to GitHub Packages for rollback support. |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | Working directory for the CDK app, relative to the repository root. |
 
@@ -207,6 +209,44 @@ Node.js version for workflow runners.
 
 ---
 
+##### `postGitHubSteps`<sup>Optional</sup> <a name="postGitHubSteps" id="@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.postGitHubSteps"></a>
+
+```typescript
+public readonly postGitHubSteps: any;
+```
+
+- *Type:* any
+
+Additional GitHub Actions steps to run after deploy completes.
+
+Only applied to deploy jobs (not synth or publish-assets).
+Accepts a static array of steps, or a factory function receiving context:
+`(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+
+When `workingDirectory` is set, all `run:` steps inherit that directory.
+To run a step at the repository root, add `working-directory: '.'` to that step.
+
+---
+
+##### `preGitHubSteps`<sup>Optional</sup> <a name="preGitHubSteps" id="@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.preGitHubSteps"></a>
+
+```typescript
+public readonly preGitHubSteps: any;
+```
+
+- *Type:* any
+
+Additional GitHub Actions steps to run before deploy (after install/artifact download, before AWS creds).
+
+Only applied to deploy jobs (not synth or publish-assets).
+Accepts a static array of steps, or a factory function receiving context:
+`(ctx: { stage: string; workingDirectory?: string }) => GitHubStep[]`
+
+When `workingDirectory` is set, all `run:` steps inherit that directory.
+To run a step at the repository root, add `working-directory: '.'` to that step.
+
+---
+
 ##### `useGithubPackagesForAssembly`<sup>Optional</sup> <a name="useGithubPackagesForAssembly" id="@jjrawlins/cdk-deploy-pr-github-action.CdkDeployPipelineOptions.property.useGithubPackagesForAssembly"></a>
 
 ```typescript
@@ -265,6 +305,8 @@ const deployDispatchInternalOptions: DeployDispatchInternalOptions = { ... }
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.pkgNamespace">pkgNamespace</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.stackPrefix">stackPrefix</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.stages">stages</a></code> | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions">DeployStageOptions</a>[]</code> | *No description.* |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.postGitHubSteps">postGitHubSteps</a></code> | <code>any</code> | *No description.* |
+| <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.preGitHubSteps">preGitHubSteps</a></code> | <code>any</code> | *No description.* |
 | <code><a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.workingDirectory">workingDirectory</a></code> | <code>string</code> | *No description.* |
 
 ---
@@ -356,6 +398,26 @@ public readonly stages: DeployStageOptions[];
 ```
 
 - *Type:* <a href="#@jjrawlins/cdk-deploy-pr-github-action.DeployStageOptions">DeployStageOptions</a>[]
+
+---
+
+##### `postGitHubSteps`<sup>Optional</sup> <a name="postGitHubSteps" id="@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.postGitHubSteps"></a>
+
+```typescript
+public readonly postGitHubSteps: any;
+```
+
+- *Type:* any
+
+---
+
+##### `preGitHubSteps`<sup>Optional</sup> <a name="preGitHubSteps" id="@jjrawlins/cdk-deploy-pr-github-action.DeployDispatchInternalOptions.property.preGitHubSteps"></a>
+
+```typescript
+public readonly preGitHubSteps: any;
+```
+
+- *Type:* any
 
 ---
 

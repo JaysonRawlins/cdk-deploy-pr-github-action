@@ -3,6 +3,18 @@ import { JobPermission } from 'projen/lib/github/workflows-model';
 import { DeployDispatchInternalOptions } from './CdkDeployPipeline';
 import { toKebabCase } from './utils';
 
+type GitHubStep = {
+  name?: string;
+  id?: string;
+  if?: string;
+  uses?: string;
+  run?: string;
+  with?: Record<string, any>;
+  env?: Record<string, string>;
+  continueOnError?: boolean;
+  shell?: string;
+};
+
 const CHECKOUT_VERSION = 'v5';
 const SETUP_NODE_VERSION = 'v5';
 const AWS_CREDENTIALS_VERSION = 'v5';
@@ -29,6 +41,8 @@ export class CdkDeployDispatchWorkflow {
       cdkCommand,
       installCommand,
       workingDirectory,
+      preGitHubSteps: rawPreSteps,
+      postGitHubSteps: rawPostSteps,
     } = options;
 
     const defaults = workingDirectory ? { run: { 'working-directory': workingDirectory } } : undefined;
@@ -75,6 +89,11 @@ export class CdkDeployDispatchWorkflow {
         .map((s) => `${cdkCommand} deploy ${s} --require-approval never --app cdk.out`)
         .join(' && ');
 
+      // Resolve pre/post steps (accept static array or factory function)
+      const stageCtx = { stage: stage.name, workingDirectory };
+      const preSteps: GitHubStep[] = typeof rawPreSteps === 'function' ? rawPreSteps(stageCtx) : (rawPreSteps ?? []);
+      const postSteps: GitHubStep[] = typeof rawPostSteps === 'function' ? rawPostSteps(stageCtx) : (rawPostSteps ?? []);
+
       jobs[jobId] = {
         name: `Deploy ${stage.name} (manual)`,
         if: `github.event.inputs.environment == '${githubEnv}'`,
@@ -114,8 +133,10 @@ export class CdkDeployDispatchWorkflow {
             run: `npm pack ${pkgNamespace}/${appName}@\${{ github.event.inputs.version }} --registry=https://npm.pkg.github.com && tar -xzf *.tgz && mv package cdk.out`,
             env: { NODE_AUTH_TOKEN: '${{ secrets.GITHUB_TOKEN }}', GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
           },
+          ...preSteps,
           {
             name: 'AWS Credentials',
+            id: 'creds',
             uses: `aws-actions/configure-aws-credentials@${AWS_CREDENTIALS_VERSION}`,
             with: {
               'role-to-assume': roleArn,
@@ -125,8 +146,10 @@ export class CdkDeployDispatchWorkflow {
           },
           {
             name: `Deploy ${stage.name}`,
+            id: 'deploy',
             run: deployCommand,
           },
+          ...postSteps,
         ],
       };
     }
