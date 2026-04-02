@@ -1,6 +1,6 @@
 import { awscdk, DependencyType, TextFile } from 'projen';
 import { GithubCredentials, workflows } from 'projen/lib/github';
-import { NpmAccess } from 'projen/lib/javascript';
+import { NpmAccess, UpgradeDependenciesSchedule } from 'projen/lib/javascript';
 
 const cdkCliVersion = '2.1029.2';
 const minNodeVersion = '20.0.0';
@@ -66,6 +66,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
     },
   },
   depsUpgrade: true,
+  depsUpgradeOptions: {
+    workflowOptions: {
+      schedule: UpgradeDependenciesSchedule.expressions(['0 9 * * 1']),
+    },
+  },
   publishToNuget: {
     packageId: 'JJRawlins.CdkDeployPrGithubAction',
     dotNetNamespace: 'JJRawlins.CdkDeployPrGithubAction',
