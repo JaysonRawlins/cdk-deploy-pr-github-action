@@ -49,5 +49,6 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+!/.github/workflows/security.yml
 !/.tool-versions
 !/.projenrc.ts
