@@ -3555,14 +3555,14 @@ jest-haste-map@30.3.0:
   optionalDependencies:
     fsevents "^2.3.3"
 
-jest-junit@^16:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-16.0.0.tgz#d838e8c561cf9fdd7eb54f63020777eee4136785"
-  integrity sha512-A94mmw6NfJab4Fg/BlvVOUXzXgF0XIH6EmTgJ5NDPp4xoKq0Kr7sErb+4Xs9nZvu58pJojz5RFGpqnZYJTrRfQ==
+jest-junit@^17:
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-17.0.0.tgz#df70832d780de9577ba133688da94487f5bbc105"
+  integrity sha512-RYWCkq4j59gUXj5DsgbIE7xFBZzu1gtibPhyjSjMmGaOTLnqlXhg7x9zuGCwgbCuMAyoyvk0Mi8wSrRR5uOeLA==
   dependencies:
     mkdirp "^1.0.4"
     strip-ansi "^6.0.1"
-    uuid "^8.3.2"
+    uuid "^14.0.0"
     xml "^1.0.1"
 
 jest-leak-detector@30.3.0:
@@ -4669,10 +4669,10 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
 
-"projen@>=0.98.10 <1.0.0":
-  version "0.99.17"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.99.17.tgz#fb822d79dc1d23db74398520799312aef531acf8"
-  integrity sha512-QhfkTKFV4ecAPesqnF9Z7WQ9sXkb7D5ESzq4ciri5m5t8hTltAuC5o4x+P9vqvt/673avSVgSI74ARYdnDAzSw==
+"projen@>=0.99.52 <1.0.0", projen@^0.99.52:
+  version "0.99.63"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.99.63.tgz#990944b08cb5c1dddf3e43ecf024afe2ed982313"
+  integrity sha512-CHM4zSRAS/zBVmdaF3AMiVJZbmQ5yjSs9bnrHkxx+mNXToh7QAeBIEsZXgdBT7bNnV6YOkNfGhbz39p7pmxQYg==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
@@ -4684,28 +4684,7 @@ process-nextick-args@~2.0.0:
     fast-json-patch "^3.1.1"
     ini "^2.0.0"
     parse-conflict-json "^4.0.0"
-    semver "^7.7.4"
-    shx "^0.4.0"
-    xmlbuilder2 "^4.0.3"
-    yaml "^2.2.2"
-    yargs "^17.7.2"
-
-projen@^0.98.10:
-  version "0.98.34"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.98.34.tgz#ff37f058d75a37f7e1fb059fd7e1d95183d629ed"
-  integrity sha512-52JX/fz5iZiy+F5r5MJjpLMtUM1sryQZVGGAVRruR6G6r8J8L/QBLXKnjss7gLPs0hbAcsCx1Zu81lh6Vnm0rA==
-  dependencies:
-    "@iarna/toml" "^2.2.5"
-    case "^1.6.3"
-    chalk "^4.1.2"
-    comment-json "4.2.2"
-    constructs "^10.0.0"
-    conventional-changelog-config-spec "^2.1.0"
-    fast-glob "^3.3.3"
-    fast-json-patch "^3.1.1"
-    ini "^2.0.0"
-    parse-conflict-json "^4.0.0"
-    semver "^7.7.3"
+    semver "^7.8.0"
     shx "^0.4.0"
     xmlbuilder2 "^4.0.3"
     yaml "^2.2.2"
@@ -4978,6 +4957,11 @@ semver@^7.0.0, semver@^7.3.4, semver@^7.5.1, semver@^7.5.3, semver@^7.5.4, semve
   version "7.7.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.4.tgz#28464e36060e991fa7a11d0279d2d3f3b57a7e8a"
   integrity sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==
+
+semver@^7.8.0:
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.0.tgz#ed0661039fcbcda2ce71f01fa6adbefaa77040df"
+  integrity sha512-AcM7dV/5ul4EekoQ29Agm5vri8JNqRyj39o0qpX6vDF2GZrtutZl5RwgD1XnZjiTAfncsJhMI48QQH3sN87YNA==
 
 set-function-length@^1.2.2:
   version "1.2.2"
@@ -5687,10 +5671,10 @@ util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+uuid@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-14.0.0.tgz#0af883220163d264ffe0c084f6b8a89b9666966d"
+  integrity sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"
