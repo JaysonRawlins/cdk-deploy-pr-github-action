@@ -3949,14 +3949,14 @@ jsesc@^3.0.2:
   integrity sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==
 
 jsii-diff@^1.128.0:
-  version "1.134.0"
-  resolved "https://registry.yarnpkg.com/jsii-diff/-/jsii-diff-1.134.0.tgz#163bbc64401c5c796adabc8796004ea825411a9c"
-  integrity sha512-RCVaDK2MZI39dY2bK+CKwvHMM/EFnXcSvA2D/kEBmBr9dYkCI6OirzBPMmju6ppUHGe4MA66tfti+4iZxChrhw==
+  version "1.135.0"
+  resolved "https://registry.yarnpkg.com/jsii-diff/-/jsii-diff-1.135.0.tgz#c1773d73cdd1efc8fc07feae15a96b8477f1314a"
+  integrity sha512-s9xjo9FzNyU3QmAvekQCOU7wexUCyFaYFxW2WfpVzVwopVxTlO3bzyCGjDRC8X8keFAA88UiLS5bp/0IdCZFUg==
   dependencies:
-    "@jsii/check-node" "1.134.0"
-    "@jsii/spec" "1.134.0"
+    "@jsii/check-node" "1.135.0"
+    "@jsii/spec" "1.135.0"
     fs-extra "^10.1.0"
-    jsii-reflect "^1.134.0"
+    jsii-reflect "^1.135.0"
     log4js "^6.9.1"
     yargs "^17.7.2"
 
@@ -5116,6 +5116,11 @@ semver@^6.3.0, semver@^6.3.1:
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
 semver@^7.0.0, semver@^7.3.4, semver@^7.5.1, semver@^7.5.3, semver@^7.5.4, semver@^7.7.1, semver@^7.7.2, semver@^7.7.3, semver@^7.7.4, semver@^7.8.0, semver@^7.8.1, semver@^7.8.2, semver@^7.8.3, semver@^7.8.4:
+  version "7.8.5"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
+  integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
+
+semver@^7.8.2, semver@^7.8.4:
   version "7.8.5"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
   integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
