@@ -61,13 +61,13 @@ importers:
         version: 1.140.0
       jsii-docgen:
         specifier: ^10.5.0
-        version: 10.12.6(jsii-rosetta@5.9.57)
+        version: 10.12.6(jsii-rosetta@5.9.65)
       jsii-pacmak:
         specifier: ^1.128.0
-        version: 1.140.0(jsii-rosetta@5.9.57)
+        version: 1.140.0(jsii-rosetta@5.9.65)
       jsii-rosetta:
         specifier: ^5.8.0
-        version: 5.9.57
+        version: 5.9.65
       projen:
         specifier: 0.99.52
         version: 0.99.52(constructs@10.0.5)
@@ -2135,18 +2135,13 @@ packages:
     peerDependencies:
       jsii-rosetta: '>=5.9.0'
 
-  jsii-reflect@1.139.0:
-    resolution: {integrity: sha512-Z8rGDzykcg6REfFV8HJZ0oms5zi8wBO4T7B5thSS4iME0osbWJP62pFn2yT6VivOESKnkFZOI3RkIKYkynPbGg==}
-    engines: {node: '>= 14.17.0'}
-    hasBin: true
-
   jsii-reflect@1.140.0:
     resolution: {integrity: sha512-8bRD6WSQfWrB6/31sz92bi21HWaMVzvxZUgaJt/IiT3RqGKc57dO+idekn8WNpTBneE9vVhj24UDExHH8YfJAQ==}
     engines: {node: '>= 14.17.0'}
     hasBin: true
 
-  jsii-rosetta@5.9.57:
-    resolution: {integrity: sha512-lkCggx58R7BSQW5bpGfWXOm7vDdpfXNyxnCHDhAFOAVq1ZTH58qUeG8XBt9QiGB8LSV4a2YsAASQ8ZqQRcQrFw==}
+  jsii-rosetta@5.9.65:
+    resolution: {integrity: sha512-V1gOVeVTUlM5hTuxzckDnxpcVabe5eCDwufxCBdCsyK5XEo1bdb9FK1yQncE3ZGLHKaAzhLL5/sCzn9U/rRFkA==}
     engines: {node: '>= 20.16.0'}
     hasBin: true
 
@@ -2414,10 +2409,6 @@ packages:
   onetime@5.1.2:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
-
-  oo-ascii-tree@1.139.0:
-    resolution: {integrity: sha512-Sv9334UvsBcvYh9xkcBtheWjH+mkhXLmuhOm+/OTGVFUCsvdVdXwDMTbYZHpJaTSbhaHScPbHqjAPECAFwlgtg==}
-    engines: {node: '>= 14.17.0'}
 
   oo-ascii-tree@1.140.0:
     resolution: {integrity: sha512-swJJN43RwwtZAtNQu03W8rqNtTUvq9T4eGU4KupRq7I9/R3exHobbF/OOm5sl6tGcumsQrNU97NBx7x+LEIPgA==}
@@ -2774,10 +2765,6 @@ packages:
 
   spdx-license-ids@3.0.23:
     resolution: {integrity: sha512-CWLcCCH7VLu13TgOH+r8p1O/Znwhqv/dbb6lqWy67G+pT1kHmeD/+V36AVb/vq8QMIQwVShJ6Ssl5FPh0fuSdw==}
-
-  spdx-license-list@6.11.0:
-    resolution: {integrity: sha512-p5ICd51dSnh7zIMtPgbB9ShBg3HMT77OeI6WVhrFFvxa5KIFYNcqxD4joAE+n1zZ7wlJdEkrOMwC75JUMMmsJA==}
-    engines: {node: '>=8'}
 
   spdx-license-list@6.12.0:
     resolution: {integrity: sha512-+nUYqm3aZMSHbjsthK+i/HHI2okTElCvqwUd4k8QcSk+FTGgjq+fsdFj2wZOaX6XmR2JdWhf/NeflNnvKOjcnQ==}
@@ -5680,19 +5667,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  jsii-docgen@10.12.6(jsii-rosetta@5.9.57):
+  jsii-docgen@10.12.6(jsii-rosetta@5.9.65):
     dependencies:
       '@jsii/spec': 1.140.0
       case: 1.6.3
       fast-glob: 3.3.3
       fs-extra: 10.1.0
       jsii-reflect: 1.140.0
-      jsii-rosetta: 5.9.57
+      jsii-rosetta: 5.9.65
       json-stream-stringify: 3.1.7
       semver: 7.8.5
       yargs: 16.2.2
 
-  jsii-pacmak@1.140.0(jsii-rosetta@5.9.57):
+  jsii-pacmak@1.140.0(jsii-rosetta@5.9.65):
     dependencies:
       '@jsii/check-node': 1.140.0
       '@jsii/spec': 1.140.0
@@ -5702,19 +5689,10 @@ snapshots:
       escape-string-regexp: 4.0.0
       fs-extra: 10.1.0
       jsii-reflect: 1.140.0
-      jsii-rosetta: 5.9.57
+      jsii-rosetta: 5.9.65
       semver: 7.8.5
       spdx-license-list: 6.12.0
       xmlbuilder: 15.1.1
-      yargs: 17.7.3
-
-  jsii-reflect@1.139.0:
-    dependencies:
-      '@jsii/check-node': 1.139.0
-      '@jsii/spec': 1.139.0
-      chalk: 4.1.2
-      fs-extra: 10.1.0
-      oo-ascii-tree: 1.139.0
       yargs: 17.7.3
 
   jsii-reflect@1.140.0:
@@ -5726,10 +5704,10 @@ snapshots:
       oo-ascii-tree: 1.140.0
       yargs: 17.7.3
 
-  jsii-rosetta@5.9.57:
+  jsii-rosetta@5.9.65:
     dependencies:
-      '@jsii/check-node': 1.139.0
-      '@jsii/spec': 1.139.0
+      '@jsii/check-node': 1.140.0
+      '@jsii/spec': 1.140.0
       '@xmldom/xmldom': 0.9.12
       chalk: 4.1.2
       commonmark: 0.31.2
@@ -6020,8 +5998,6 @@ snapshots:
   onetime@5.1.2:
     dependencies:
       mimic-fn: 2.1.0
-
-  oo-ascii-tree@1.139.0: {}
 
   oo-ascii-tree@1.140.0: {}
 
@@ -6378,8 +6354,6 @@ snapshots:
       spdx-license-ids: 3.0.23
 
   spdx-license-ids@3.0.23: {}
-
-  spdx-license-list@6.11.0: {}
 
   spdx-license-list@6.12.0: {}
 
